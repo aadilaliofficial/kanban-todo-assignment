@@ -1,5 +1,4 @@
 const Task = require('../models/Task');
-const User = require('../models/User');
 const ActionLog = require('../models/ActionLog');
 
 exports.getTasks = async (req, res) => {
