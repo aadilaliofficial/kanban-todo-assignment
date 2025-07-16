@@ -1,0 +1,91 @@
+.kanban-container {
+  padding: 1rem;
+}
+
+.kanban-columns {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.kanban-column {
+  width: 32%;
+  background: #f0f0f0;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.kanban-card {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.kanban-columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.activity-log {
+  margin-top: 2rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.activity-log ul {
+  list-style: none;
+  padding: 0;
+}
+
+.kanban-column {
+  width: 32%;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f1f1f1;
+  min-height: 300px;
+}
+
+.kanban-card {
+  background: white;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.kanban-columns {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 300px;
+  background: #f0f0f0;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.kanban-card {
+  background: #fff;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.activity-log {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
