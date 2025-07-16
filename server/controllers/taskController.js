@@ -55,7 +55,6 @@ exports.deleteTask = async (req, res) => {
   res.json({ message: 'Task deleted' });
 };
 
-const Task = require('../models/Task');
 const User = require('../models/User');
 const ActionLog = require('../models/ActionLog');
 
