@@ -1,5 +1,6 @@
-const Task = require('../models/Task');
+const User = require('../models/User');
 const ActionLog = require('../models/ActionLog');
+const Task = require('../models/Task');
 
 exports.getTasks = async (req, res) => {
   const tasks = await Task.find().populate('assignedTo', 'name');
@@ -53,9 +54,6 @@ exports.deleteTask = async (req, res) => {
   });
   res.json({ message: 'Task deleted' });
 };
-
-const User = require('../models/User');
-const ActionLog = require('../models/ActionLog');
 
 exports.smartAssign = async (req, res) => {
   try {
