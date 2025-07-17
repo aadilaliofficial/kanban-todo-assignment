@@ -45,7 +45,7 @@ const Kanban = () => {
       socket.off('task-updated');
       socket.off('task-deleted');
     };
-  }, []);
+  }, [user.id]);
 
   useEffect(() => {
     fetchTasks();
@@ -67,63 +67,77 @@ const Kanban = () => {
 
     const { draggableId, destination, source } = result;
 
-    const taskId = draggableId;
-    const newStatus = destination.droppableId;
-
     // Don't update if dropped in same column
     if (destination.droppableId === source.droppableId) return;
 
     socket.emit('update-task', {
-      taskId,
-      updatedFields: { status: newStatus },
+      taskId: draggableId,
+      updatedFields: { status: destination.droppableId },
     });
   };
 
   return (
-    <div className="kanban-container">
-      <h2>Welcome, {user.name}</h2>
+    <div className="container my-4">
+      <h2 className="mb-4 text-primary">Welcome, {user.name}</h2>
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="kanban-columns">
+        <div className="row gx-3">
           {statusOptions.map((status) => (
             <Droppable key={status} droppableId={status}>
               {(provided) => (
                 <div
-                  className="kanban-column"
+                  className="col-md-4"
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <h3>{status}</h3>
-                  {tasks
-                    .filter((task) => task.status === status)
-                    .map((task, index) => (
-                      <Draggable
-                        key={task._id}
-                        draggableId={task._id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className="kanban-card"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
+                  <div className="card mb-4 shadow-sm">
+                    <div className="card-header bg-info text-white fw-bold">
+                      {status}
+                    </div>
+                    <div className="card-body" style={{ minHeight: '300px' }}>
+                      {tasks
+                        .filter((task) => task.status === status)
+                        .map((task, index) => (
+                          <Draggable
+                            key={task._id}
+                            draggableId={task._id}
+                            index={index}
                           >
-                            <h4>{task.title}</h4>
-                            <p>{task.description}</p>
-                            <p>👤 {task.assignedTo?.name || 'Unassigned'}</p>
-                            <p>⭐ {task.priority}</p>
+                            {(provided, snapshot) => (
+                              <div
+                                className={`card mb-3 ${
+                                  snapshot.isDragging ? 'border-primary shadow' : ''
+                                }`}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <div className="card-body">
+                                  <h5 className="card-title">{task.title}</h5>
+                                  <p className="card-text">{task.description}</p>
+                                  <p className="mb-1">
+                                    <strong>👤 Assigned to: </strong>
+                                    {task.assignedTo?.name || 'Unassigned'}
+                                  </p>
+                                  <p className="mb-3">
+                                    <strong>⭐ Priority: </strong>
+                                    {task.priority}
+                                  </p>
 
-                            <button
-                              onClick={() => handleSmartAssign(task._id)}
-                            >
-                              🤖 Smart Assign
-                            </button>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                  {provided.placeholder}
+                                  <button
+                                    className="btn btn-sm btn-outline-success"
+                                    onClick={() => handleSmartAssign(task._id)}
+                                  >
+                                    🤖 Smart Assign
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                      {provided.placeholder}
+                    </div>
+                  </div>
                 </div>
               )}
             </Droppable>
