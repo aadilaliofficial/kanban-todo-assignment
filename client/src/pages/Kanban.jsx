@@ -7,12 +7,14 @@ import {
   Draggable,
 } from '@hello-pangea/dnd';
 import ActivityLog from '../components/ActivityLog';
+import { useNavigate } from 'react-router-dom';
 
 const statusOptions = ['Todo', 'In Progress', 'Done'];
 
 const Kanban = () => {
   const [tasks, setTasks] = useState([]);
   const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
 
   const fetchTasks = async () => {
     try {
@@ -76,9 +78,57 @@ const Kanban = () => {
     });
   };
 
+  // Add Task
+  const handleAddTask = async () => {
+    const title = prompt('Enter task title');
+    if (!title) return;
+    const description = prompt('Enter task description');
+    try {
+      const res = await axios.post('/tasks', {
+        title,
+        description,
+        status: 'Todo',
+        priority: 'Medium',
+      });
+      setTasks((prev) => [...prev, res.data]);
+      socket.emit('task-created', res.data);
+    } catch (err) {
+      alert('Failed to add task');
+    }
+  };
+
+  // Remove Task
+  const handleRemoveTask = async (taskId) => {
+    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    try {
+      await axios.delete(`/tasks/${taskId}`);
+      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+      socket.emit('task-deleted', taskId);
+    } catch {
+      alert('Failed to delete task');
+    }
+  };
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    socket.emit('user-disconnected', user.id);
+    navigate('/login');
+  };
+
   return (
     <div className="container my-4">
-      <h2 className="mb-4 text-primary">Welcome, {user.name}</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2 className="text-primary">Welcome, {user.name}</h2>
+        <div>
+          <button className="btn btn-success me-2" onClick={handleAddTask}>
+            + Add Task
+          </button>
+          <button className="btn btn-danger" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="row gx-3">
@@ -106,7 +156,9 @@ const Kanban = () => {
                             {(provided, snapshot) => (
                               <div
                                 className={`card mb-3 ${
-                                  snapshot.isDragging ? 'border-primary shadow' : ''
+                                  snapshot.isDragging
+                                    ? 'border-primary shadow'
+                                    : ''
                                 }`}
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
@@ -125,10 +177,16 @@ const Kanban = () => {
                                   </p>
 
                                   <button
-                                    className="btn btn-sm btn-outline-success"
+                                    className="btn btn-sm btn-outline-success me-2"
                                     onClick={() => handleSmartAssign(task._id)}
                                   >
                                     🤖 Smart Assign
+                                  </button>
+                                  <button
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => handleRemoveTask(task._id)}
+                                  >
+                                    🗑️ Delete
                                   </button>
                                 </div>
                               </div>
