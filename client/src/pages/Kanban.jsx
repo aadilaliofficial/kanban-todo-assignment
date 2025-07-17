@@ -6,6 +6,7 @@ import {
   Droppable,
   Draggable,
 } from '@hello-pangea/dnd';
+import ActivityLog from '../components/ActivityLog';
 
 const statusOptions = ['Todo', 'In Progress', 'Done'];
 
@@ -129,13 +130,9 @@ const Kanban = () => {
           ))}
         </div>
       </DragDropContext>
-        <div className="kanban-container">
-      ...
+
+      <ActivityLog />
     </div>
-      </div>
-    <ActivityLog />
-    
-    
   );
 };
 
