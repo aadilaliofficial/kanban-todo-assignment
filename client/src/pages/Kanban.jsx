@@ -132,8 +132,9 @@ const Kanban = () => {
         <div className="kanban-container">
       ...
     </div>
+      </div>
     <ActivityLog />
-    </div>
+    
     
   );
 };
