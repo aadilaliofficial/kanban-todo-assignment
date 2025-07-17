@@ -72,6 +72,13 @@ const Kanban = () => {
     // Don't update if dropped in same column
     if (destination.droppableId === source.droppableId) return;
 
+    // Optimistically update task status locally:
+    setTasks((prev) =>
+      prev.map((task) =>
+        task._id === draggableId ? { ...task, status: destination.droppableId } : task
+      )
+    );
+
     socket.emit('update-task', {
       taskId: draggableId,
       updatedFields: { status: destination.droppableId },
